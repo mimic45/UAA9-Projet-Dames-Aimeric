@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Jeu_Dame_Aimeric")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f0a033c5010af5af2fffedcaed3c1bcc261224d3")]
 [assembly: System.Reflection.AssemblyProductAttribute("Jeu_Dame_Aimeric")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Jeu_Dame_Aimeric")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

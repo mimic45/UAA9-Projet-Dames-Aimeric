@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.Reflection.Metadata.Ecma335;
 
 namespace Dames
 {
@@ -7,6 +8,7 @@ namespace Dames
         static void Main(string[] args)
         {
             int tour = 2;
+
 
             int[,] plateau = new int[8, 8];
             string pionNoir = "o";
@@ -30,19 +32,31 @@ namespace Dames
                     Console.WriteLine("C'EST AUX BLANCS (O)");
                     CreaPlat(plateau, pionNoir, pionBlanc);
 
-                    Deplacement(plateau, 0, 0, tour);
-                    tour = 1;
+                    bool obligationDeManger = PeutManger(plateau, tour);
+
+                    if (obligationDeManger)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.WriteLine("!!! VOUS AVEZ UNE PRISE OBLIGATOIRE !!!");
+                        Console.ResetColor();
+                    }
+
+                    bool coupReussi = Deplacement(plateau, 0, 0, tour, obligationDeManger);
+                    if (coupReussi)
+                    {
+                        tour = 1;
+                    }
+                    
                 }
-                //sinon c est au tour du bot
-                else
+                else if (tour == 1)
                 {
-                    TourDuBot(plateau, niveau);
                     Console.WriteLine("C'EST AUX NOIRS (o)");
+                    TourDuBot(plateau, niveau);
+                    CreaPlat(plateau, pionNoir, pionBlanc);
+                    Console.ReadKey();
                     tour = 2;
                 }
-
-
-                Console.Clear();
+                
 
                 nbNoirs = 0;
                 nbBlanc = 0;
@@ -104,31 +118,31 @@ namespace Dames
             int ligneTest = l1 + dirL;
             int colTest = c1 + dirC;
 
-            // Boucle qui "marche" sur la diagonale jusqu'à la case juste AVANT l'arrivée
+            // Boucle qui "marche" sur la diagonale jusqu'à la case juste avant l'arrivée
             while (ligneTest != l2 && colTest != c2)
             {
                 int piece = plateau[ligneTest, colTest];
 
                 if (piece != 0) // Si la case n'est pas vide
                 {
-                    // Est-ce un allié ? (Tour 2 = Blancs cherchent Blancs (2,3))
+                    // regarde si c est un allier
                     bool estAllie = (tour == 2 && (piece == 2 || piece == 3)) ||
                                    (tour == 1 && (piece == 1 || piece == 4));
 
-                    if (estAllie) return 0; // BLOQUÉ par un ami
+                    if (estAllie) return 0; // bloqué par un ami
 
                     // Sinon c'est un ennemi
                     nbEnnemis++;
                 }
 
-                if (nbEnnemis > 1) return 0; // BLOQUÉ : on ne peut pas sauter 2 pions d'un coup
+                if (nbEnnemis > 1) return 0; 
 
                 ligneTest += dirL;
                 colTest += dirC;
             }
 
-            if (nbEnnemis == 1) return 2; // On a trouvé un pion à manger
-            return 1; // Chemin parfaitement vide
+            if (nbEnnemis == 1) return 2;
+            return 1; 
         }
 
         // placement des pions
@@ -224,7 +238,7 @@ namespace Dames
             Console.WriteLine("═══╝\n");
         }
 
-        static void Deplacement(int[,] plateau, int ligne, int col, int tour)
+        static bool Deplacement(int[,] plateau, int ligne, int col, int tour, bool obligationDeManger)
         {
             Console.WriteLine("Ligne du pion à bouger (0-7) :");
             ligne = int.Parse(Console.ReadLine());
@@ -233,12 +247,12 @@ namespace Dames
 
             int pion = plateau[ligne, col];
 
-            // 1. Vérification de base (est-ce bien ton pion ?)
+            
             if (plateau[ligne, col] == 0 || (tour == 2 && plateau[ligne, col] != 2 && plateau[ligne, col] != 3) || (tour == 1 && plateau[ligne, col] != 1 && plateau[ligne, col] != 4))
             {
                 Console.WriteLine("Ce n'est pas votre pion !");
                 Console.ReadLine();
-                return;
+                return false;
             }
 
             Console.WriteLine("Ligne d'arrivée :");
@@ -246,36 +260,42 @@ namespace Dames
             Console.WriteLine("Colonne d'arrivée :");
             int colArrivee = int.Parse(Console.ReadLine());
 
-            // 2. Vérification Diagonale
+            
             if (EstDiagonale(ligne, col, ligneArrive, colArrivee) == false)
             {
                 Console.WriteLine("Mouvement non diagonal interdit !");
                 Console.ReadLine();
-                return;
+                return false;
             }
 
             int distanceLigne = Math.Abs(ligneArrive - ligne);
+
+            if (obligationDeManger == true && distanceLigne != 2)
+            {
+                Console.WriteLine("Pas possible!!");
+                return false;
+            }
 
             // 3. Règles spécifiques aux pions (pas les Dames)
             if ((pion == 1 || pion == 2) && distanceLigne > 2)
             {
                 Console.WriteLine("Un pion ne peut pas sauter aussi loin !");
                 Console.ReadLine();
-                return;
+                return false;
             }
 
             if (pion == 2 && ligneArrive > ligne) // Le pion blanc ne recule pas
             {
                 Console.WriteLine("Un pion ne peut pas reculer !");
                 Console.ReadLine();
-                return;
+                return false;
             }
 
             if (pion == 1 && ligneArrive < ligne) // Le pion noir (bot) ne recule pas
             {
                 Console.WriteLine("Un pion ne peut pas reculer !");
                 Console.ReadLine();
-                return;
+                return false;
             }
 
             // 4. Case d'arrivée vide ?
@@ -283,7 +303,7 @@ namespace Dames
             {
                 Console.WriteLine("Case occupée !");
                 Console.ReadLine();
-                return;
+                return false;
             }
 
             // 5. Analyse du chemin (Obstacles et prises)
@@ -293,12 +313,10 @@ namespace Dames
             {
                 Console.WriteLine("Mouvement impossible (chemin bloqué) !");
                 Console.ReadLine();
-                return;
+                return false;
             }
 
-            // --- MISE À JOUR DU PLATEAU ---
-
-            // Si on a sauté un pion (resultat 2), on le supprime
+            
             if (resultatChemin == 2)
             {
                 int dirL = (ligneArrive > ligne) ? 1 : -1;
@@ -306,7 +324,7 @@ namespace Dames
                 int tempL = ligne + dirL;
                 int tempC = col + dirC;
 
-                while (plateau[tempL, tempC] == 0) // On cherche le pion sur le chemin
+                while (plateau[tempL, tempC] == 0)
                 {
                     tempL += dirL;
                     tempC += dirC;
@@ -315,14 +333,21 @@ namespace Dames
                 Console.WriteLine("Pion mangé !");
             }
 
-            // Le mouvement effectif
             plateau[ligne, col] = 0; // Ancienne case vide
             plateau[ligneArrive, colArrivee] = pion; // Nouveau placement
 
             // Transformation en Dame
-            if (ligneArrive == 0 && pion == 2) plateau[ligneArrive, colArrivee] = 3;
-            else if (ligneArrive == 7 && pion == 1) plateau[ligneArrive, colArrivee] = 4;
+            if (ligneArrive == 0 && pion == 2)
+            {
+                plateau[ligneArrive, colArrivee] = 3;
+            }
+            else if (ligneArrive == 7 && pion == 1) 
+            {
+                plateau[ligneArrive, colArrivee] = 4;
+            }
+            return true;
         }
+     
 
         static void TourDuBot(int[,] plateau, int niveau)
         {
@@ -341,11 +366,18 @@ namespace Dames
                         int departCol = iCol;
 
                         int arriveL = iLigne + 1;
-                        int arriveCol = iCol + 1;
+                        int arriveColDroite = iCol + 1;
+                        int arriveColGauche = iCol - 1;
 
-                        if (arriveL < 8 && arriveCol < 8 && plateau[arriveL, arriveCol] == 0)
+                        if (arriveL < 8 && arriveColDroite < 8 && plateau[arriveL, arriveColDroite] == 0)
                         {
-                            plateau[arriveL, arriveCol] = 1;
+                            plateau[arriveL, arriveColDroite] = 1;
+                            plateau[departL, departCol] = 0;
+                            aJoue = true;
+                        }
+                        else if (arriveL < 8 && arriveColGauche >= 0 && plateau[arriveL, arriveColGauche] == 0)
+                        {
+                            plateau[arriveL, arriveColGauche] = 1;
                             plateau[departL, departCol] = 0;
                             aJoue = true;
                         }
@@ -416,6 +448,44 @@ namespace Dames
                     essais++;
                 }
             }
+        }
+
+        static bool PeutManger(int[,] plateau, int tour)
+        {
+            int[] dL = { 1, 1, -1, -1 };
+            int[] dC = { 1, -1, 1, -1 };
+
+            for (int iLigne = 0; iLigne < 8; iLigne++)
+            {
+                for (int iCol = 0; iCol < 8; iCol++)
+                {
+                    int piece = plateau[iLigne, iCol];
+
+                    if ((tour == 2 && (piece == 2 || piece == 3)) || (tour == 1 && (piece == 1 || piece == 4)))
+                    {
+                        for (int direction = 0; direction < 4; direction++)
+                        {
+                            int lignArr = iLigne + (dL[direction] * 2);
+                            int colArr = iCol + (dC[direction] * 2);
+
+                           
+                            if (lignArr >= 0 && lignArr < 8 && colArr >= 0 && colArr < 8)
+                            {
+                                
+                                if (plateau[lignArr, colArr] == 0)
+                                {
+                                    
+                                    if (AnalyserChemin(plateau, iLigne, iCol, lignArr, colArr, tour) == 2)
+                                    {
+                                        return true; 
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            return false; 
         }
     }
 }

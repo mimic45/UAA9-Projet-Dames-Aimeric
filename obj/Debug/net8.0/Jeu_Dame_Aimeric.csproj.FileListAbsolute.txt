@@ -12,3 +12,4 @@ C:\Users\aimer\Desktop\Jeu_Dame_Aimeric\obj\Debug\net8.0\refint\Jeu_Dame_Aimeric
 C:\Users\aimer\Desktop\Jeu_Dame_Aimeric\obj\Debug\net8.0\Jeu_Dame_Aimeric.pdb
 C:\Users\aimer\Desktop\Jeu_Dame_Aimeric\obj\Debug\net8.0\Jeu_Dame_Aimeric.genruntimeconfig.cache
 C:\Users\aimer\Desktop\Jeu_Dame_Aimeric\obj\Debug\net8.0\ref\Jeu_Dame_Aimeric.dll
+C:\Users\aimer\Desktop\Jeu_Dame_Aimeric\obj\Debug\net8.0\Jeu_Dame_Aimeric.sourcelink.json
