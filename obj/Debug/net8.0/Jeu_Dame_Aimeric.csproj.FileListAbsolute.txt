@@ -1,0 +1,14 @@
+C:\Users\aimer\Desktop\Jeu_Dame_Aimeric\bin\Debug\net8.0\Jeu_Dame_Aimeric.exe
+C:\Users\aimer\Desktop\Jeu_Dame_Aimeric\bin\Debug\net8.0\Jeu_Dame_Aimeric.deps.json
+C:\Users\aimer\Desktop\Jeu_Dame_Aimeric\bin\Debug\net8.0\Jeu_Dame_Aimeric.runtimeconfig.json
+C:\Users\aimer\Desktop\Jeu_Dame_Aimeric\bin\Debug\net8.0\Jeu_Dame_Aimeric.dll
+C:\Users\aimer\Desktop\Jeu_Dame_Aimeric\bin\Debug\net8.0\Jeu_Dame_Aimeric.pdb
+C:\Users\aimer\Desktop\Jeu_Dame_Aimeric\obj\Debug\net8.0\Jeu_Dame_Aimeric.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\aimer\Desktop\Jeu_Dame_Aimeric\obj\Debug\net8.0\Jeu_Dame_Aimeric.AssemblyInfoInputs.cache
+C:\Users\aimer\Desktop\Jeu_Dame_Aimeric\obj\Debug\net8.0\Jeu_Dame_Aimeric.AssemblyInfo.cs
+C:\Users\aimer\Desktop\Jeu_Dame_Aimeric\obj\Debug\net8.0\Jeu_Dame_Aimeric.csproj.CoreCompileInputs.cache
+C:\Users\aimer\Desktop\Jeu_Dame_Aimeric\obj\Debug\net8.0\Jeu_Dame_Aimeric.dll
+C:\Users\aimer\Desktop\Jeu_Dame_Aimeric\obj\Debug\net8.0\refint\Jeu_Dame_Aimeric.dll
+C:\Users\aimer\Desktop\Jeu_Dame_Aimeric\obj\Debug\net8.0\Jeu_Dame_Aimeric.pdb
+C:\Users\aimer\Desktop\Jeu_Dame_Aimeric\obj\Debug\net8.0\Jeu_Dame_Aimeric.genruntimeconfig.cache
+C:\Users\aimer\Desktop\Jeu_Dame_Aimeric\obj\Debug\net8.0\ref\Jeu_Dame_Aimeric.dll
