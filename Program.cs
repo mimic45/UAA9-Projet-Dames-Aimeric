@@ -29,6 +29,7 @@ namespace Dames
                 // si c est le tour du joueur (2)
                 if (tour == 2)
                 {
+                    Console.Clear();
                     Console.WriteLine("C'EST AUX BLANCS (O)");
                     CreaPlat(plateau, pionNoir, pionBlanc);
 
@@ -98,15 +99,9 @@ namespace Dames
             int distC = Math.Abs(c2 - c1);
 
             // On renvoie vrai si les distances sont égales (mouvement diagonal)
+            // return sert a sortir directement de la fonction
             return distL == distC;
-            /*if (distL == distC)
-               
-                return true;
-            }
-            else
-            {
-                return false;
-            } c'est la même chose */
+            
         }
 
         static int AnalyserChemin(int[,] plateau, int l1, int c1, int l2, int c2, int tour)
@@ -270,7 +265,7 @@ namespace Dames
 
             int distanceLigne = Math.Abs(ligneArrive - ligne);
 
-            if (obligationDeManger == true && distanceLigne != 2)
+            if (obligationDeManger == true && distanceLigne != 2 && pion != 3 && pion != 4)
             {
                 Console.WriteLine("Pas possible!!");
                 return false;
@@ -374,13 +369,23 @@ namespace Dames
                             plateau[arriveL, arriveColDroite] = 1;
                             plateau[departL, departCol] = 0;
                             aJoue = true;
+                            if (arriveL == 7)
+                            {
+                                plateau[arriveL, arriveColDroite] = 4;
+                            }
                         }
                         else if (arriveL < 8 && arriveColGauche >= 0 && plateau[arriveL, arriveColGauche] == 0)
                         {
                             plateau[arriveL, arriveColGauche] = 1;
                             plateau[departL, departCol] = 0;
                             aJoue = true;
+                            if (arriveL == 7)
+                            {
+                                plateau[arriveL, arriveColGauche] = 4;
+                            }
                         }
+
+
                     }
                 }
             }
@@ -399,8 +404,13 @@ namespace Dames
                                     plateau[iLigne, iCol] = 0;
                                     plateau[iLigne + 1, iCol + 1] = 0;
                                     plateau[iLigne + 2, iCol + 2] = 1;
+                                    if (iLigne + 2 == 7)
+                                    {
+                                        plateau[iLigne + 2, iCol + 2] = 4;
+                                    }
                                     return;
                                 }
+
                             }
 
                             if (iLigne + 2 < 8 && iCol - 2 >= 0)
@@ -410,48 +420,77 @@ namespace Dames
                                     plateau[iLigne, iCol] = 0;
                                     plateau[iLigne + 1, iCol - 1] = 0;
                                     plateau[iLigne + 2, iCol - 2] = 1;
+                                    if (iLigne + 2 == 7)
+                                    {
+                                        plateau[iLigne + 2, iCol - 2] = 4;
+                                    }
                                     return;
                                 }
+
                             }
                         }
                     }
                 }
 
-
-                Random alea = new Random();
-
-                bool aJoue = false;
-                int essais = 0;
-                while (!aJoue && essais < 200)
+                for (int iLigne = 7; iLigne >= 0; iLigne--)
                 {
-                    int iLigne = alea.Next(0, 8);
-                    int iCol = alea.Next(0, 8);
-
-                    if (plateau[iLigne, iCol] == 1)
+                    for (int iCol = 7; iCol >= 0; iCol--)
                     {
-                        int departL = iLigne;
-                        int departCol = iCol;
-
-                        int arriveL = iLigne + 1;
-
-                        int direction = alea.Next(0, 2) * 2 - 1;
-
-                        int arriveCol = iCol + direction;
-
-                        if (arriveL < 8 && arriveCol < 8 && arriveCol >= 0 && plateau[arriveL, arriveCol] == 0)
+                        if (plateau[iLigne, iCol] == 1)
                         {
-                            plateau[arriveL, arriveCol] = 1;
-                            plateau[departL, departCol] = 0;
-                            aJoue = true;
+                            int departL = iLigne;
+                            int departCol = iCol;
+
+                            int arriveL = iLigne + 1;
+                            int arriveColDroite = iCol + 1;
+                            int arriveColGauche = iCol - 1;
+
+                            if (arriveL < 8 && arriveColDroite < 8 && plateau[arriveL, arriveColDroite] == 0)
+                            {
+                                plateau[arriveL, arriveColDroite] = 1;
+                                plateau[departL, departCol] = 0;
+                                return;
+                            }
+                            else if (arriveL < 8 && arriveColGauche >= 0 && plateau[arriveL, arriveColGauche] == 0)
+                            {
+                                plateau[arriveL, arriveColGauche] = 1;
+                                plateau[departL, departCol] = 0;
+                                return;
+                            }
                         }
                     }
-                    essais++;
                 }
             }
+            else if (niveau == 3) 
+            { 
+
+            }
+        }
+
+        static bool EstenDanger(int[,] plateau, int ligne, int col)
+        {
+            int[] dL = { 1, 1, -1, -1 };
+            int[] dC = { 1, -1, 1, -1 };
+
+            int voisinL = ligne + dL[direction];
+            int voisinC = col + dC[direction];
+            int derriereL = ligne - dL[direction];
+            int derriereC = col - dC[direction];
+
+
+
+
+            int piece = plateau[ligne, col];
+            for (int direction = 0; direction < 4; direction++)
+            {
+                int lignArr = ligne + (dL[direction]);
+                int colArr = col + (dC[direction]);
+            }    
         }
 
         static bool PeutManger(int[,] plateau, int tour)
         {
+            // tableau des détections pour manger
             int[] dL = { 1, 1, -1, -1 };
             int[] dC = { 1, -1, 1, -1 };
 
